@@ -35,7 +35,7 @@ if __name__ == '__main__':
         data = uploaded_file.getvalue()
         image = Image.open(io.BytesIO(data))
       else:
-        image = Image.open('../images/cat.jpg')
+        image = Image.open('images/cat.jpg')
 
       st.image(image)
 
