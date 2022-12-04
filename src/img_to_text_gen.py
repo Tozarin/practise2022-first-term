@@ -1,5 +1,4 @@
 import torch
-from PIL import Image
 from transformers import VisionEncoderDecoderModel, ViTFeatureExtractor, AutoTokenizer
 
 itt_model = None
@@ -32,23 +31,20 @@ def init_itt():
     itt_inited = True
     return itt_inited
 
-def gen_itt(image_path):
+def gen_itt(image):
     if not itt_inited:
+        return None
+    if image is None:
         return None
 
     max_length = 16
     num_beams = 4
     gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
 
-    try:
-        i_image = Image.open(image_path)
-    except:
-        return None
+    if image.mode != "RGB":
+        image = image.convert(mode="RGB")
 
-    if i_image.mode != "RGB":
-        i_image = i_image.convert(mode="RGB")
-
-    images = [i_image]
+    images = [image]
 
     pixel_values = itt_feature_extractor(images=images, return_tensors="pt").pixel_values
     pixel_values = pixel_values.to(itt_device)
@@ -58,5 +54,4 @@ def gen_itt(image_path):
     preds = itt_tokenizer.batch_decode(output_ids, skip_special_tokens=True)
     preds = [pred.strip() for pred in preds]
 
-    i_image.close()
     return preds[0]

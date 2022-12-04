@@ -23,8 +23,7 @@ def init_ttt():
 def gen_ttt(base_text):
     print(base_text)
     if not ttt_inited:
-        print('1')
         return None
 
-    output = ttt_generator(base_text, max_length=256, num_return_sequences=1)
+    output = ttt_generator(base_text, max_length=512, num_return_sequences=1)
     return output[0]['generated_text']
