@@ -1,4 +1,3 @@
-import sys
 import io
 import streamlit as st
 
@@ -44,8 +43,3 @@ if __name__ == '__main__':
 
       st.title('Discription')
       st.write(discription)
-
-  #if len(sys.argv) > 1:
-  #  if init_itt() and init_ttt():
-  #    text = gen_text(path=sys.argv[1])
-  #    print(text)
