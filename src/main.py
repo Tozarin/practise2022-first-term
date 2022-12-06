@@ -6,43 +6,47 @@ from PIL import Image
 from img_to_text_gen import IttGenerator
 from text_to_text_gen import TttGenerator
 
+
 def gen_text(image):
 
-  itt_generator = IttGenerator()
-  ttt_generator = TttGenerator()
+    itt_generator = IttGenerator()
+    ttt_generator = TttGenerator()
 
-  text = itt_generator.gen(image=image)
+    text = itt_generator.gen(image=image)
 
-  if text is None:
-    return 'Failed wile generating text from image'
+    if text is None:
+        return 'Failed wile generating text from image'
 
-  text = ttt_generator.gen(base_text=text)
+    text = ttt_generator.gen(base_text=text)
 
-  if text is None:
-    return 'Faield wile generating text from text'
+    if text is None:
+        return 'Faield wile generating text from text'
 
-  return text
+    return text
 
 if __name__ == '__main__':
 
-  st.set_page_config(page_title='Funny descriptions generator', page_icon=':skull:', layout='wide')
+    st.set_page_config(
+      page_title='Funny descriptions generator',
+      page_icon=':skull:',
+      layout='wide')
 
-  with st.container():
-    left_column, right_column = st.columns(2)
+    with st.container():
+        left_column, right_column = st.columns(2)
 
-    with left_column:
-      uploaded_file = st.file_uploader(label="Choose a file")
+        with left_column:
+            uploaded_file = st.file_uploader(label="Choose a file")
 
-      if uploaded_file is not None:
-        data = uploaded_file.getvalue()
-        image = Image.open(io.BytesIO(data))
-      else:
-        image = Image.open('../images/cat.jpg')
+            if uploaded_file is not None:
+                data = uploaded_file.getvalue()
+                image = Image.open(io.BytesIO(data))
+            else:
+                image = Image.open('../images/cat.jpg')
 
-      st.image(image)
+            st.image(image)
 
-    with right_column:
-      discription = gen_text(image=image)
+        with right_column:
+            discription = gen_text(image=image)
 
-      st.title('Discription')
-      st.write(discription)
+            st.title('Discription')
+            st.write(discription)
