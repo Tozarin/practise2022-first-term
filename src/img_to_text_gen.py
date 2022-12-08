@@ -19,13 +19,13 @@ class IttGenerator(object):
         .device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
+    max_length = 64
+    num_beams = 1
+    min_length = 16
+
     def gen(self, image):
         if image is None:
             return None
-
-        max_length = 16
-        num_beams = 4
-        gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
 
         if image.mode != "RGB":
             image = image.convert(mode="RGB")
@@ -37,7 +37,10 @@ class IttGenerator(object):
             return_tensors="pt").pixel_values
         pixel_values = pixel_values.to(self.device)
 
-        output_ids = self.model.generate(pixel_values, **gen_kwargs)
+        output_ids = self.model.generate(pixel_values,
+                                         max_length=self.max_length,
+                                         min_length=self.min_length,
+                                         num_beams=self.num_beams)
 
         preds = self.tokenizer.batch_decode(
             output_ids,

@@ -1,35 +1,32 @@
-import sys
 import io
 import streamlit as st
 
 from PIL import Image
 from img_to_text_gen import IttGenerator
-from text_to_text_gen import TttGenerator
 
 
 def gen_text(image):
 
     itt_generator = IttGenerator()
-    ttt_generator = TttGenerator()
 
     text = itt_generator.gen(image=image)
 
     if text is None:
         return 'Failed wile generating text from image'
 
-    text = ttt_generator.gen(base_text=text)
-
-    if text is None:
-        return 'Faield wile generating text from text'
-
     return text
 
-if __name__ == '__main__':
 
+def main():
     st.set_page_config(
-      page_title='Funny descriptions generator',
-      page_icon=':skull:',
-      layout='wide')
+        page_title='Funny descriptions generator',
+        page_icon=':skull:',
+        layout='wide')
+
+    itt_generator = IttGenerator()
+    itt_generator.num_beams = st.sidebar.slider("Num beams", 1, 16, 4)
+    itt_generator.max_length = st.sidebar.slider("Max length", 64, 512, 128)
+    itt_generator.min_length = st.sidebar.slider("Min length", 1, 64, 16)
 
     with st.container():
         left_column, right_column = st.columns(2)
@@ -46,7 +43,11 @@ if __name__ == '__main__':
             st.image(image)
 
         with right_column:
-            discription = gen_text(image=image)
+            description = gen_text(image=image)
 
-            st.title('Discription')
-            st.write(discription)
+            st.title('Description')
+            st.write(description)
+
+
+if __name__ == '__main__':
+    main()
