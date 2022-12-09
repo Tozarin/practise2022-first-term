@@ -5,14 +5,15 @@ from PIL import Image
 from img_to_text_gen import IttGenerator
 
 
-def gen_text(image):
+def gen_text(image, max_length, min_length, num_beams):
 
     itt_generator = IttGenerator()
 
-    text = itt_generator.gen(image=image)
-
-    if text is None:
-        return 'Failed wile generating text from image'
+    text = itt_generator.gen(
+        image=image,
+        max_length=max_length,
+        min_length=min_length,
+        num_beams=num_beams)
 
     return text
 
@@ -23,10 +24,9 @@ def main():
         page_icon=':skull:',
         layout='wide')
 
-    itt_generator = IttGenerator()
-    itt_generator.num_beams = st.sidebar.slider("Num beams", 1, 16, 4)
-    itt_generator.max_length = st.sidebar.slider("Max length", 64, 512, 128)
-    itt_generator.min_length = st.sidebar.slider("Min length", 1, 64, 16)
+    num_beams = st.sidebar.slider("Num beams", 1, 16, 4)
+    max_length = st.sidebar.slider("Max length", 1, 256, 128)
+    min_length = st.sidebar.slider("Min length", 1, 256, 16)
 
     with st.container():
         left_column, right_column = st.columns(2)
@@ -43,7 +43,11 @@ def main():
             st.image(image)
 
         with right_column:
-            description = gen_text(image=image)
+            description = gen_text(
+                image=image,
+                max_length=max_length,
+                min_length=min_length,
+                num_beams=num_beams)
 
             st.title('Description')
             st.write(description)

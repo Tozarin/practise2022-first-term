@@ -9,23 +9,23 @@ class IttGenerator(object):
             cls.instance = super(IttGenerator, cls).__new__(cls)
         return cls.instance
 
-    model = VisionEncoderDecoderModel\
-        .from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-    feature_extractor = ViTFeatureExtractor\
-        .from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-    tokenizer = AutoTokenizer\
-        .from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-    device = torch\
-        .device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)
+    def __init__(self):
+        self.model = VisionEncoderDecoderModel\
+            .from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+        self.feature_extractor = ViTFeatureExtractor\
+            .from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+        self.tokenizer = AutoTokenizer\
+            .from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+        self.device = torch\
+            .device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model.to(self.device)
 
-    max_length = 64
-    num_beams = 1
-    min_length = 16
-
-    def gen(self, image):
+    def gen(self, image, max_length, min_length, num_beams):
         if image is None:
-            return None
+            return "Failed wile opening an image"
+
+        if max_length < min_length:
+            return "Max length must be greater than min length"
 
         if image.mode != "RGB":
             image = image.convert(mode="RGB")
@@ -38,9 +38,9 @@ class IttGenerator(object):
         pixel_values = pixel_values.to(self.device)
 
         output_ids = self.model.generate(pixel_values,
-                                         max_length=self.max_length,
-                                         min_length=self.min_length,
-                                         num_beams=self.num_beams)
+                                         max_length=max_length,
+                                         min_length=min_length,
+                                         num_beams=num_beams)
 
         preds = self.tokenizer.batch_decode(
             output_ids,
