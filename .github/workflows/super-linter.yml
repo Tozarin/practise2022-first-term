@@ -9,10 +9,10 @@ name: Lint Code Base
 on:
   push:
     branches: 
-      -*
+      [Practise]
   pull_request:
     branches:
-      -*
+      [Practise]
 jobs:
   run-lint:
     runs-on: ubuntu-latest
