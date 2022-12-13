@@ -21,8 +21,9 @@ class IttGenerator(object):
         self.model.to(self.device)
 
     def gen(self, image, max_length, min_length, num_beams):
+        image = None
         if image is None:
-            return "Failed wile opening an image"
+            raise ValueError("An image is None")
 
         if max_length < min_length:
             return "Max length must be greater than min length"

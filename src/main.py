@@ -6,14 +6,16 @@ from img_to_text_gen import IttGenerator
 
 
 def gen_text(image, max_length, min_length, num_beams):
-
     itt_generator = IttGenerator()
 
-    text = itt_generator.gen(
-        image=image,
-        max_length=max_length,
-        min_length=min_length,
-        num_beams=num_beams)
+    try:
+        text = itt_generator.gen(
+            image=image,
+            max_length=max_length,
+            min_length=min_length,
+            num_beams=num_beams)
+    except ValueError:
+        return "Failed wille opening an image"
 
     return text
 
